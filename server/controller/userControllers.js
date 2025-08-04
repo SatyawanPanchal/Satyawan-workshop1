@@ -1,6 +1,13 @@
 import { hashPassword,comparePassword } from "../util/passUtils.js";
 import { User } from './../models/userModel.js';
 import jwt from "jsonwebtoken";
+import dotenv from 'dotenv';
+
+dotenv.config();
+
+// login controller here
+// 
+// 
 
 const loginController = async (req, res) => {
   const { email, password } = req.body;
@@ -8,45 +15,67 @@ const loginController = async (req, res) => {
 
   try {
     if (!email || !password) {
-      return res.send({
+      return res.json({
         success: false,
         message: "email or password is not given",
       });
     }
 
-    const isExistingUser = await User.findOne({ email });
+    const ExistingUser = await User.findOne({ email });
+    console.log(`${ExistingUser} is existing user---->`);
+    
 
-    if (!isExistingUser) {
-      return res.send({
+    if (!ExistingUser) {
+      return res.json({
         success: false,
-        message: `user doesnt exist`,
+        message: `${email} not registered`,
       });
     }
     //  if user is found compare the hashed password
     const passwordByUser = password;
-    const passwordFromDatabase = isExistingUser.password;
+    const passwordFromDatabase = ExistingUser.password;
 
-    const isValidPassword = await comparePassword(
+    const ValidPassword = await comparePassword(
       passwordByUser,
       passwordFromDatabase
     );
-    console.log("password is valid --->", isValidPassword);
+    console.log("password is valid --->", ValidPassword);
+
+    if(!ValidPassword)
+    {
+        return res.json({
+            success:false,
+            message:`password is not valid`,
+        })
+    }
+
+ 
+    
+
+    const token = jwt.sign(
+        { _id: ExistingUser._id },
+        process.env.JWT_SECRET,
+        { expiresIn: "1d" }
+    );
 
     // creating a token and sending it to user for further communication
 
-    const token = await jwt.sign(
-      { _id: isExistingUser._id },
-      process.env.JWT_SECRET,
-      { expiresIn: "1d" }
-    );
+    if(ValidPassword &&ExistingUser)
+    {
 
-    isExistingUser.password = undefined;
-    res.send({
-      success: true,
-      message: `user ${isExistingUser.name} is found and login successful`,
-      isExistingUser,
-      token,
-    });
+        
+        ExistingUser.password = undefined;
+        res.json({
+            success: true,
+            message: `user ${ExistingUser.name}  login successful`,
+            token:token,
+             user:{id:ExistingUser._id,
+                name:ExistingUser.name,
+                email:ExistingUser.email,
+
+             },
+        });
+    }
     console.log("user details", token);
   } catch (error) {
     console.log(`some error occured as ----> ${error.message}`.bgCyan.red);
@@ -63,22 +92,15 @@ const registerController=async(req,res)=>{
 
   try {
     const { name, email, password } = req.body;
-    // check if all fields are recieved
-    if (!name || !email || !password) {
-      res.status(400).send({
-        success: false,
-        message: "all fields are not recieved at backend",
-      });
-      return;
-    }
+   
     //  check if this is existing user
 
     const isExixtingUser = await User.findOne({ email });
 
     if (isExixtingUser) {
-      return res.status(500).json({
+      return res.json({
         success: false,
-        message: "user is  existing ",
+        message: `${email}user already  exists `,
       });
     }
 
@@ -97,12 +119,12 @@ const registerController=async(req,res)=>{
       res.json({
         success: true,
         nameSaved:userSaved.name,
-        message: `all is well here , lets put data in database`,
+        message: `${userSaved.email} saved successfully`,
       });
     }
   } catch (error) {
     console.log(`error in register ${error.message}`.bgBlack.white);
-    res.status(501).send({
+    res.status.json({
       success: false,
       message: `error occured as ${error.message}`,
     });

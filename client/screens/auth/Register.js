@@ -4,14 +4,13 @@ import SubmitButton from "@/components/forms/SubmitButton";
 import InputBox from "@/components/forms/InputBox";
 import axios from "axios";
 
-
 export default function Register({ navigation }) {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   const handleSubmit = async () => {
-    if (!password || !email) {
+    if (!name || !password || !email) {
       return Alert.alert("enter name, email and pass");
     }
 
@@ -21,18 +20,16 @@ export default function Register({ navigation }) {
         { name, email, password }
       );
 
-      if (res.data.success) {
-        Alert.alert("data submitted successfully");
-      }
-      if(!res.data.success){
+      if (!res.data.success) {
         Alert.alert(res.data.message);
-        console.log(`error message ${res.data.message}` );
-        
+      }
+      if (res.data.success) {
+        Alert.alert(res.data.message);
       }
     } catch (error) {
-      Alert.alert(`error occured in ${error.response.message}  `);
+      Alert.alert(`error occured is ${error.response.message}  `);
       console.log(`error ${error.message}`);
-      console.log("Error:", error.response?.data.message || error.message);
+       
     }
   };
 
