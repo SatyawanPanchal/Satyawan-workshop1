@@ -1,53 +1,74 @@
-import { Alert, ScrollView, StyleSheet, Text, View } from "react-native";
+import { Alert, ScrollView, Text } from "react-native";
 import React, { useState } from "react";
 import SubmitButton from "@/components/forms/SubmitButton";
 import InputBox from "@/components/forms/InputBox";
+import axios from "axios";
 
-export default function Register({navigation}) {
-      const [name, setName] = useState("");
+
+export default function Register({ navigation }) {
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-const handleSubmit=()=>{
-if(!password || !email)
-    {
-        return Alert.alert("enter name, email and pass")
+  const handleSubmit = async () => {
+    if (!password || !email) {
+      return Alert.alert("enter name, email and pass");
     }
-}
+
+    try {
+      const res = await axios.post(
+        "http://192.168.31.57:5000/api/auth/register",
+        { name, email, password }
+      );
+
+      if (res.data.success) {
+        Alert.alert("data submitted successfully");
+      }
+      if(!res.data.success){
+        Alert.alert(res.data.message);
+        console.log(`error message ${res.data.message}` );
+        
+      }
+    } catch (error) {
+      Alert.alert(`error occured in ${error.response.message}  `);
+      console.log(`error ${error.message}`);
+      console.log("Error:", error.response?.data.message || error.message);
+    }
+  };
 
   return (
-      <ScrollView>
-        <Text>Registration Page</Text>
-        
-        <InputBox 
+    <ScrollView>
+      <Text>Registration Page</Text>
+
+      <InputBox
         inputTitle={"Name"}
-        placeholder={"Enter Your Name"} 
+        placeholder={"Enter Your Name"}
         value={name}
-        setValue={setName} />
-        <InputBox 
+        setValue={setName}
+      />
+      <InputBox
         inputTitle={"Email"}
-        placeholder={"Enter email"} 
+        placeholder={"Enter email"}
         value={email}
-        setValue={setEmail} />
-  
-        <InputBox
-          inputTitle={"Password"}
-          placeholder={"enter your password"}
-          value={password}
-          setValue={setPassword}
-          secureTextEntry={true}
-        />
-        <SubmitButton
-          btnTitle={"Registration Button"}
-          handleSubmit={handleSubmit}
-        />
+        setValue={setEmail}
+      />
 
-        <Text>
-            Already Registered
-            <Text onPress={()=>navigation.navigate("Login")}>...Login here</Text>
-        </Text>
-      </ScrollView>
-    );
+      <InputBox
+        inputTitle={"Password"}
+        placeholder={"enter your password"}
+        value={password}
+        setValue={setPassword}
+        secureTextEntry={true}
+      />
+      <SubmitButton
+        btnTitle={"Registration Button"}
+        handleSubmit={handleSubmit}
+      />
+
+      <Text>
+        Already Registered
+        <Text onPress={() => navigation.navigate("Login")}>...Login here</Text>
+      </Text>
+    </ScrollView>
+  );
 }
-
-const styles = StyleSheet.create({});

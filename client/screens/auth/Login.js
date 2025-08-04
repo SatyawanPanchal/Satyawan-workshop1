@@ -1,9 +1,10 @@
-import { Alert, ScrollView, StyleSheet, Text, View } from "react-native";
+import { Alert, ScrollView,   Text  } from "react-native";
 import React, { useState } from "react";
 import InputBox from "./../../components/forms/InputBox.js";
 import SubmitButton from './../../components/forms/SubmitButton';
+import axios from "axios";
 
-export default function login({navigation}) {
+export default function Login({navigation}) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -13,6 +14,16 @@ export default function login({navigation}) {
     {
         return Alert.alert("enter email and pass both")
     }
+const res = await axios.post(
+        "http://192.168.31.57:5000/api/auth/login",
+        { email, password }
+      );
+
+      if(res.data)
+      {
+        Alert.alert("data submitted successfully");
+      }
+
 
   }
   return (
@@ -44,4 +55,4 @@ export default function login({navigation}) {
   );
 }
 
-const styles = StyleSheet.create({});
+ 
