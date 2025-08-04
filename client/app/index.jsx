@@ -6,12 +6,12 @@ import Login from "@/screens/auth/Login.js";
 import Cart from "./../screens/cart/cart.js";
 import { useContext } from "react";
 export default function Index() {
- // const {state, setState} = useContext(AuthContext);
+
   const Stack = createNativeStackNavigator();
 
   return (
     <AuthProvider>
-      <Stack.Navigator initialRouteName="Cart">
+      <Stack.Navigator initialRouteName="Login">
         <Stack.Screen
           name="Register"
           component={Register}

@@ -1,13 +1,15 @@
 import { Alert, ScrollView, Text } from "react-native";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import InputBox from "./../../components/forms/InputBox.js";
 import SubmitButton from "./../../components/forms/SubmitButton";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { AuthContext } from "@/context/useContext.js";
 
 export default function Login({ navigation }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const {state, setState} = useContext(AuthContext);
 
   const handleSubmit = async () => {
     try {
