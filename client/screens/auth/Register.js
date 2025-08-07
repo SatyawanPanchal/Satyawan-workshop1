@@ -16,7 +16,7 @@ export default function Register({ navigation }) {
 
     try {
       const res = await axios.post(
-        "http://192.168.31.57:5000/api/auth/register",
+        "/api/auth/register",
         { name, email, password }
       );
 

@@ -1,8 +1,6 @@
-import { useEffect } from "react";
-import { useState } from "react";
-import { createContext } from "react";
+import { useEffect,useState,createContext } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { Children } from "react";
+import axios from "axios"; 
 
 const AuthContext = createContext();
 const AuthProvider = ({children}) => {
@@ -11,6 +9,9 @@ const AuthProvider = ({children}) => {
     token: "",
   });
 
+  // setting default url setting for server
+
+  axios.defaults.baseURL="http://192.168.31.57:5000";
   useEffect(()=>{
 const getStorageData=async()=>{
     const data=await AsyncStorage.getItem("@auth");
@@ -22,7 +23,7 @@ getStorageData();
 
   },[]);
   useEffect(()=>{
-    
+
   },[])
 return(
     <AuthContext.Provider value={{state, setState}}>

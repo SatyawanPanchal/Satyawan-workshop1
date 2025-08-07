@@ -9,18 +9,18 @@ import { AuthContext } from "@/context/useContext.js";
 export default function Login({ navigation }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const {state, setState} = useContext(AuthContext);
+  const { state, setState } = useContext(AuthContext);
 
   const handleSubmit = async () => {
     try {
       if (!password || !email) {
         return Alert.alert("enter email and pass both");
       }
-      const res = await axios.post("http://192.168.31.57:5000/api/auth/login", {
+      const res = await axios.post("/api/auth/login", {
         email,
         password,
       });
-
+      //setState(JSON.stringify(res.data));
       if (res.data.success) {
         Alert.alert(res.data.message);
         console.log(`${res.data.token} is data from server......>>>`);
@@ -39,18 +39,20 @@ export default function Login({ navigation }) {
 
       await AsyncStorage.setItem("@auth", dataForStorage);
 
-      console.log('here we go with =======> contents of async storage');
+     // console.log("here we go with =======> contents of async storage");
 
-      const dataFromStorage= await AsyncStorage.getItem('@auth');
-      console.log('=====>>>>',JSON.parse(dataFromStorage));
-      
-      navigation.navigate("Cart")
+      const dataFromStorage = await AsyncStorage.getItem("@auth");
+      // console.log("=====>>>>", JSON.parse(dataFromStorage));
+
+      navigation.navigate("Cart");
       // navigation.navigate("Cart");
     } catch (error) {
       Alert.alert(`${error.message} is an error`);
       console.log(`${error.message}`);
     }
   };
+  //console.log(`value of state in login .....state`,JSON.stringify(state) );
+
   return (
     <ScrollView>
       <Text>Login Page</Text>
