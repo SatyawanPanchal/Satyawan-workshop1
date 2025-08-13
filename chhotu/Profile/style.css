@@ -1,0 +1,14 @@
+.main-container{
+    display: flex;
+    flex-direction: row;
+     
+    width: 100%;
+    font-size: 40px;
+    border: dotted;
+}
+img{
+    width: 400;
+}
+.text-container{
+    width: 50%;
+}

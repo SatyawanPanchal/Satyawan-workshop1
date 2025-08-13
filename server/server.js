@@ -4,6 +4,8 @@ import dotenv from 'dotenv'
 import colors from 'colors'
 import userRouter from './router/userRoutes.js';
 import connectDB from './config/db.js';
+ 
+import postRouter from './router/postRoutes.js';
 
 dotenv.config();
 const app=express();
@@ -12,6 +14,7 @@ app.use(cors());
 app.use(express.json());
 connectDB();
 app.use("/api/auth",userRouter);
+app.use("/api/post",postRouter);
 app.get('/',(req,res)=>{
     console.log(`server is running `.bgGreen.white);
     

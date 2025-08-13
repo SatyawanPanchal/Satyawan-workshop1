@@ -1,4 +1,5 @@
-import { Alert, Text, TouchableOpacity, View } from "react-native";
+/* eslint-disable no-unused-vars */
+import { Alert, SafeAreaView, Text, TouchableOpacity} from "react-native";
 import React, {   useContext } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { AuthContext } from "@/context/useContext.js";
@@ -14,12 +15,12 @@ export default function Cart({ navigation }) {
     navigation.navigate("Login");
   };
   return (
-    <View>
+    <SafeAreaView>
       <Text>login success .. i am in cart{JSON.stringify(state,null,4)}</Text>
       <TouchableOpacity>
         <Text onPress={handleLogout}>logout</Text>
       </TouchableOpacity>
-    </View>
+    </SafeAreaView>
   );
 }
 

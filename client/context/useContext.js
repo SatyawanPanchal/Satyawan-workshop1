@@ -9,19 +9,25 @@ const AuthProvider = ({children}) => {
     token: "",
   });
 
+  useEffect(()=>{
+    const getStorageData=async()=>{
+      const data=await AsyncStorage.getItem("@auth");
+      const dataFromStorage=JSON.parse(data);
+      setState({...state,user:dataFromStorage?.user,token:dataFromStorage?.token});
+    }
+    getStorageData();
+    
+    
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  },[]);
   // setting default url setting for server
 
-  axios.defaults.baseURL="http://192.168.31.57:5000";
-  useEffect(()=>{
-const getStorageData=async()=>{
-    const data=await AsyncStorage.getItem("@auth");
-    const dataFromStorage=JSON.parse(data);
-    setState({...state,user:dataFromStorage?.user,token:dataFromStorage?.token});
-}
-getStorageData();
+//  axios.defaults.baseURL="http://192.168.31.57:5000";
+  // // axios.defaults.baseURL="http://192.168.1.2:5000";
+   axios.defaults.baseURL="http://10.26.174.16:5000";
+axios.defaults.headers.common["Authorization"]=`Bearer ${state?.token}`
 
 
-  },[]);
   useEffect(()=>{
 
   },[])

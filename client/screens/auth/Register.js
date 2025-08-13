@@ -35,7 +35,7 @@ export default function Register({ navigation }) {
 
   return (
     <ScrollView>
-      <Text>Registration Page</Text>
+       
 
       <InputBox
         inputTitle={"Name"}

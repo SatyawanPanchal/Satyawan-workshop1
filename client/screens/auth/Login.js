@@ -6,7 +6,8 @@ import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { AuthContext } from "@/context/useContext.js";
 
-export default function Login({ navigation }) {
+export default function Login({ navigation }) 
+{
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const { state, setState } = useContext(AuthContext);
@@ -16,21 +17,26 @@ export default function Login({ navigation }) {
       if (!password || !email) {
         return Alert.alert("enter email and pass both");
       }
+      console.log(`email${email} and password${password} are stored in Login`);
+      
       const res = await axios.post("/api/auth/login", {
         email,
         password,
       });
       //setState(JSON.stringify(res.data));
+
+      // we will set the state on successful login
+
       if (res.data.success) {
         Alert.alert(res.data.message);
         console.log(`${res.data.token} is data from server......>>>`);
-      }
-      if (!res.data.success) {
-        Alert.alert(res.data.message);
-        console.log(`${res.data.message} is an error as success is false`);
-      }
+        console.log("data from server----->",res.data.user);
+        setState((prev)=>({
+          ...prev,
+          user:res.data.user , token:res.data.token,
+        }))
 
-      const dataForStorage = JSON.stringify({
+        const dataForStorage = JSON.stringify({
         token: res.data.token,
         user: res.data.user,
       });
@@ -38,13 +44,20 @@ export default function Login({ navigation }) {
       // console.log("data for the storage ---->", dataForStorage);
 
       await AsyncStorage.setItem("@auth", dataForStorage);
+      }
+      if (!res.data.success) {
+        Alert.alert(res.data.message);
+        console.log(`${res.data.message} is an error as success is false`);
+      }
+
+      
 
      // console.log("here we go with =======> contents of async storage");
 
       const dataFromStorage = await AsyncStorage.getItem("@auth");
       // console.log("=====>>>>", JSON.parse(dataFromStorage));
 
-      navigation.navigate("Cart");
+      navigation.navigate("Home");
       // navigation.navigate("Cart");
     } catch (error) {
       Alert.alert(`${error.message} is an error`);
@@ -55,7 +68,7 @@ export default function Login({ navigation }) {
 
   return (
     <ScrollView>
-      <Text>Login Page</Text>
+     
       <InputBox
         inputTitle={"Email"}
         placeholder={"Enter email"}
